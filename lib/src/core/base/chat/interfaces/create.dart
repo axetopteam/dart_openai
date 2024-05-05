@@ -6,7 +6,7 @@ import '../../../models/tool/tool.dart';
 abstract class CreateInterface {
   Future<OpenAIChatCompletionModel> create({
     required String model,
-    required List<OpenAIChatCompletionChoiceMessageModel> messages,
+    required List<OpenAIChatCompletionChoiceMessageInterface> messages,
     List<OpenAIToolModel>? tools,
     toolChoice,
     double? temperature,

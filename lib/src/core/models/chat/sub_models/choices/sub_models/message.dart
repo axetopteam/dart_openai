@@ -6,11 +6,19 @@ import 'sub_models/tool_call.dart';
 export 'sub_models/content.dart';
 export 'sub_models/tool_call.dart';
 
+abstract final class OpenAIChatCompletionChoiceMessageInterface {
+  abstract final OpenAIChatMessageRole role;
+  const OpenAIChatCompletionChoiceMessageInterface();
+
+  Map<String, dynamic> toMap();
+}
+
 /// {@template openai_chat_completion_choice_message_model}
 /// This represents the message of the [OpenAIChatCompletionChoiceModel] model of the OpenAI API, which is used and get returned while using the [OpenAIChat] methods.
 /// {@endtemplate}
-final class OpenAIChatCompletionChoiceMessageModel {
+final class OpenAIChatCompletionChoiceMessageModel implements OpenAIChatCompletionChoiceMessageInterface {
   /// The [role] of the message.
+  @override
   final OpenAIChatMessageRole role;
 
   /// The [content] of the message.
@@ -47,22 +55,20 @@ final class OpenAIChatCompletionChoiceMessageModel {
   ) {
     return OpenAIChatCompletionChoiceMessageModel(
       name: json['name'],
-      role: OpenAIChatMessageRole.values
-          .firstWhere((role) => role.name == json['role']),
+      role: OpenAIChatMessageRole.values.firstWhere((role) => role.name == json['role']),
       content: json['content'] != null
           ? OpenAIMessageDynamicContentFromFieldAdapter.dynamicContentFromField(
               json['content'],
             )
           : null,
       toolCalls: json['tool_calls'] != null
-          ? (json['tool_calls'] as List)
-              .map((toolCall) => OpenAIResponseToolCall.fromMap(toolCall))
-              .toList()
+          ? (json['tool_calls'] as List).map((toolCall) => OpenAIResponseToolCall.fromMap(toolCall)).toList()
           : null,
     );
   }
 
 // This method used to convert the [OpenAIChatCompletionChoiceMessageModel] to a [Map<String, dynamic>] object.
+  @override
   Map<String, dynamic> toMap() {
     return {
       "role": role.name,
@@ -114,8 +120,7 @@ final class OpenAIChatCompletionChoiceMessageModel {
 /// {@template openai_chat_completion_function_choice_message_model}
 /// This represents the message of the [RequestFunctionMessage] model of the OpenAI API, which is used  while using the [OpenAIChat] methods, precisely to send a response function message as a request function message for next requests.
 /// {@endtemplate}
-base class RequestFunctionMessage
-    extends OpenAIChatCompletionChoiceMessageModel {
+base class RequestFunctionMessage extends OpenAIChatCompletionChoiceMessageModel {
   /// The [toolCallId] of the message.
   final String toolCallId;
 
@@ -136,4 +141,61 @@ base class RequestFunctionMessage
   }
 
   //! Does this needs fromMap method?
+}
+
+base class OpenAIChatCompletionChoiceSimpleMessageModel implements OpenAIChatCompletionChoiceMessageInterface {
+  /// The [role] of the message.
+  @override
+  final OpenAIChatMessageRole role;
+
+  /// The [content] of the message.
+  final String content;
+
+  @override
+  int get hashCode {
+    return role.hashCode ^ content.hashCode;
+  }
+
+  /// {@macro openai_chat_completion_choice_message_model}
+  const OpenAIChatCompletionChoiceSimpleMessageModel({
+    required this.role,
+    required this.content,
+  });
+
+  /// This is used  to convert a [Map<String, dynamic>] object to a [OpenAIChatCompletionChoiceMessageModel] object.
+  factory OpenAIChatCompletionChoiceSimpleMessageModel.fromMap(
+    Map<String, dynamic> json,
+  ) {
+    return OpenAIChatCompletionChoiceSimpleMessageModel(
+      role: OpenAIChatMessageRole.values.firstWhere((role) => role.name == json['role']),
+      content: json['content'] as String,
+    );
+  }
+
+// This method used to convert the [OpenAIChatCompletionChoiceMessageModel] to a [Map<String, dynamic>] object.
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      "role": role.name,
+      "content": content,
+    };
+  }
+
+  @override
+  String toString() {
+    String str = 'OpenAIChatCompletionChoiceSimpleMessageModel('
+        'role: $role, '
+        'content: $content';
+
+    str += ')';
+
+    return str;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is OpenAIChatCompletionChoiceSimpleMessageModel && other.role == role && other.content == content;
+  }
 }

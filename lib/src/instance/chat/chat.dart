@@ -68,7 +68,7 @@ interface class OpenAIChat implements OpenAIChatBase {
   @override
   Future<OpenAIChatCompletionModel> create({
     required String model,
-    required List<OpenAIChatCompletionChoiceMessageModel> messages,
+    required List<OpenAIChatCompletionChoiceMessageInterface> messages,
     List<OpenAIToolModel>? tools,
     toolChoice,
     double? temperature,
@@ -91,8 +91,7 @@ interface class OpenAIChat implements OpenAIChatBase {
       body: {
         "model": model,
         "messages": messages.map((message) => message.toMap()).toList(),
-        if (tools != null)
-          "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
+        if (tools != null) "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
         if (toolChoice != null) "tool_choice": toolChoice,
         if (temperature != null) "temperature": temperature,
         if (topP != null) "top_p": topP,
@@ -187,8 +186,7 @@ interface class OpenAIChat implements OpenAIChatBase {
         "model": model,
         "stream": true,
         "messages": messages.map((message) => message.toMap()).toList(),
-        if (tools != null)
-          "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
+        if (tools != null) "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
         if (toolChoice != null) "tool_choice": toolChoice,
         if (temperature != null) "temperature": temperature,
         if (topP != null) "top_p": topP,
@@ -234,8 +232,7 @@ interface class OpenAIChat implements OpenAIChatBase {
         "model": model,
         "stream": true,
         "messages": messages.map((message) => message.toMap()).toList(),
-        if (tools != null)
-          "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
+        if (tools != null) "tools": tools.map((tool) => tool.toMap()).toList(growable: false),
         if (toolChoice != null) "tool_choice": toolChoice,
         if (temperature != null) "temperature": temperature,
         if (topP != null) "top_p": topP,
