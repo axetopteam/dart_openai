@@ -143,7 +143,7 @@ base class RequestFunctionMessage extends OpenAIChatCompletionChoiceMessageModel
   //! Does this needs fromMap method?
 }
 
-base class OpenAIChatCompletionChoiceSimpleMessageModel implements OpenAIChatCompletionChoiceMessageInterface {
+base class OpenAIChatCompletionChoiceTextMessageModel implements OpenAIChatCompletionChoiceMessageInterface {
   /// The [role] of the message.
   @override
   final OpenAIChatMessageRole role;
@@ -157,16 +157,16 @@ base class OpenAIChatCompletionChoiceSimpleMessageModel implements OpenAIChatCom
   }
 
   /// {@macro openai_chat_completion_choice_message_model}
-  const OpenAIChatCompletionChoiceSimpleMessageModel({
+  const OpenAIChatCompletionChoiceTextMessageModel({
     required this.role,
     required this.content,
   });
 
   /// This is used  to convert a [Map<String, dynamic>] object to a [OpenAIChatCompletionChoiceMessageModel] object.
-  factory OpenAIChatCompletionChoiceSimpleMessageModel.fromMap(
+  factory OpenAIChatCompletionChoiceTextMessageModel.fromMap(
     Map<String, dynamic> json,
   ) {
-    return OpenAIChatCompletionChoiceSimpleMessageModel(
+    return OpenAIChatCompletionChoiceTextMessageModel(
       role: OpenAIChatMessageRole.values.firstWhere((role) => role.name == json['role']),
       content: json['content'] as String,
     );
@@ -196,6 +196,6 @@ base class OpenAIChatCompletionChoiceSimpleMessageModel implements OpenAIChatCom
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is OpenAIChatCompletionChoiceSimpleMessageModel && other.role == role && other.content == content;
+    return other is OpenAIChatCompletionChoiceTextMessageModel && other.role == role && other.content == content;
   }
 }
